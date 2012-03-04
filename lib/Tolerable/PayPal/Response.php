@@ -46,16 +46,16 @@ class Response
      * Build a response object based on the type of request
      * 
      * @param string $method
-     * @param string $response NVP string from Tolerable_PayPal
+     * @param string $response NVP string from PayPal
      * @return Response 
      */
     public static function factory($method, $response)
     {
-        parse_str($response, $data);
+        \parse_str($response, $data);
         
         switch ($method) {
             case self::SET_EXPRESS_CHECKOUT :
-                return new Tolerable_PayPal_Response($data);
+                return new Response($data);
             case self::GET_EXPRESS_CHECKOUT_DETAILS :
                 // TODO Implement GetExpressCheckoutDetailsResponse
             case self::DO_EXPRESS_CHECKOUT_PAYMENT :

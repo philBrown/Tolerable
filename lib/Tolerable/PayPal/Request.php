@@ -22,7 +22,7 @@ abstract class Request
     
     public function toString()
     {
-        return implode('&', $this->toArray());
+        return \implode('&', $this->toArray());
     }
     
     public function __toString()

@@ -11,6 +11,11 @@ class DoExpressCheckoutPaymentRequest extends ExpressCheckoutRequest
     
     protected $payerId;
     
+    public function __construct($payerId)
+    {
+        $this->setPayerId($payerId);
+    }
+    
     public function setPayerId($payerId)
     {
         $this->payerId = $payerId;

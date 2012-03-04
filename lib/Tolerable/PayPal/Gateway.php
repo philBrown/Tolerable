@@ -97,7 +97,7 @@ class Gateway
             throw new Exception($httpResponse->getMessage(), $httpResponse->getStatus());
         }
         
-        $response = Tolerable_PayPal_Response::factory($request->getMethod(), $httpResponse->getBody());
+        $response = Response::factory($request->getMethod(), $httpResponse->getBody());
         
         if ($response->isError()) {
             throw new Exception($response->getLongErrorMessage(), $response->getErrorCode());

@@ -55,11 +55,6 @@ abstract class ExpressCheckoutRequest extends Request
     
     protected $shipToPhone;
     
-    public function __construct(array $items)
-    {
-        $this->items = $items;
-    }
-    
     public function setToken($token)
     {
         $this->token = $token;
@@ -126,6 +121,21 @@ abstract class ExpressCheckoutRequest extends Request
         return $this;
     }
     
+    public function addItem(Item $item)
+    {
+        $this->items[] = $item;
+        return $this;
+    }
+    
+    public function addItems(array $items)
+    {
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
+        
+        return $this;
+    }
+    
     public function toArray()
     {
         $itemTotal = $this->getItemTotal();
@@ -178,7 +188,7 @@ abstract class ExpressCheckoutRequest extends Request
     protected function getItemTotal()
     {
         $total = 0;
-        /* @var $item Tolerable_PayPal_Item */
+        /* @var $item Item */
         foreach ($this->items as $item) {
             $total += $item->getTotalAmount();
         }

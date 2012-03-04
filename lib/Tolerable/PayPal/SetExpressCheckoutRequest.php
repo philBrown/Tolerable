@@ -23,9 +23,8 @@ class SetExpressCheckoutRequest extends ExpressCheckoutRequest
     
     protected $cancelUrl;
     
-    public function __construct(array $items, $returnUrl, $cancelUrl)
+    public function __construct($returnUrl, $cancelUrl)
     {
-        parent::__construct($items);
         $this->setReturnUrl($returnUrl)
              ->setCancelUrl($cancelUrl);
     }
