@@ -11,6 +11,7 @@ class Item
     const DESCRIPTION = 'L_PAYMENTREQUEST_0_DESC%d';
     const AMOUNT      = 'L_PAYMENTREQUEST_0_AMT%d';
     const QTY         = 'L_PAYMENTREQUEST_0_QTY%d';
+    const TAX         = 'L_PAYMENTREQUEST_0_TAXAMT%d';
 
     /**
      * @var string
@@ -21,6 +22,11 @@ class Item
      * @var double
      */
     protected $amount;
+    
+    /**
+     * @var double
+     */
+    protected $tax;
     
     /**
      * @var string
@@ -73,6 +79,22 @@ class Item
         return $this;
     }
     
+    public function getTax()
+    {
+        return sprintf('%0.2f', $this->tax);
+    }
+    
+    public function getTotalTaxAmount()
+    {
+        return $this->getTax() * $this->getQuantity();
+    }
+    
+    public function setTax($tax)
+    {
+        $this->tax = (double) $tax;
+        return $this;
+    }
+    
     /**
      * @return string
      */
@@ -115,7 +137,8 @@ class Item
             sprintf(self::NAME, $index)        => $this->getName(),
             sprintf(self::DESCRIPTION, $index) => $this->getDescription(),
             sprintf(self::AMOUNT, $index)      => $this->getAmount(),
-            sprintf(self::QTY, $index)         => $this->getQuantity()
+            sprintf(self::QTY, $index)         => $this->getQuantity(),
+            sprintf(self::TAX, $index)         => $this->getTax()
         );
     }
 }

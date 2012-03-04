@@ -139,12 +139,14 @@ abstract class ExpressCheckoutRequest extends Request
     public function toArray()
     {
         $itemTotal = $this->getItemTotal();
-        $total = $this->shippingAmount + $itemTotal;
+        $taxTotal = $this->getItemTaxTotal();
+        $total = $this->shippingAmount + $itemTotal + $taxTotal;
         
         $params = array(
             self::PAYMENT_ACTION         => $this->paymentAction,
             self::ALLOWED_PAYMENT_METHOD => $this->allowedPaymentMethods,
             self::AMOUNT                 => sprintf('%0.2f', $total),
+            self::TAX_AMOUNT             => sprintf('%0.2f', $taxTotal),
             self::TOTAL_AMOUNT           => sprintf('%0.2f', $itemTotal),
             self::CURRENCY_CODE          => $this->currenyCode,
             self::SHIPPINGAMT            => sprintf('%0.2f', $this->shippingAmount),
@@ -191,6 +193,16 @@ abstract class ExpressCheckoutRequest extends Request
         /* @var $item Item */
         foreach ($this->items as $item) {
             $total += $item->getTotalAmount();
+        }
+        return $total;
+    }
+    
+    protected function getItemTaxTotal()
+    {
+        $total = 0;
+        /* @var $item Item */
+        foreach ($this->items as $item) {
+            $total += $item->getTotalTaxAmount();
         }
         return $total;
     }

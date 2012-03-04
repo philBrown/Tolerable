@@ -8,3 +8,7 @@ spl_autoload_register(function($class)
         return true;
     }
 });
+
+require_once 'Zend/Loader/Autoloader.php';
+
+Zend_Loader_Autoloader::getInstance();
