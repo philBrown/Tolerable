@@ -2,7 +2,7 @@
 namespace Tolerable\PayPal;
 
 use \PHPUnit_Framework_TestCase;
-use \Zend_Http_Client;
+use Guzzle\Service\Client;
 
 /**
  * Test class for Tolerable_PayPal_Gateway.
@@ -21,10 +21,15 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $httpClient = new Zend_Http_Client("https://api-3t.sandbox.paypal.com/nvp");
+        $httpClient = new Client();
+        $httpClient->setConfig(array(
+            'curl.CURLOPT_SSL_VERIFYHOST' => false,
+            'curl.CURLOPT_SSL_VERIFYPEER' => false,
+        ));
         $this->gateway = new Gateway(
                 $httpClient, "seller_1298871127_biz_api1.philipbrown.id.au",
                 "1298871136", "AyfC9oEHO-Ezj45ZrHIGKn0Gg-DhAou.YiHYRSS9JazujWP6UXIBOZ-5");
+        $this->gateway->setWebServiceUrl(Gateway::SANDBOX_WS_URL);
     }
 
     /**

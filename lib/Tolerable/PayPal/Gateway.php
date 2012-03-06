@@ -1,7 +1,7 @@
 <?php
 namespace Tolerable\PayPal;
 
-use \Zend_Http_Client;
+use Guzzle\Service\ClientInterface;
 use \Exception;
 
 class Gateway
@@ -23,11 +23,13 @@ class Gateway
     private $signature;
     
     /**
-     * @var Zend_Http_Client
+     * @var ClientInterface
      */
     private $client;
+    
+    private $webServiceUrl = self::WS_URL;
 
-    public function __construct(Zend_Http_Client $client, $username, $password, $signature)
+    public function __construct(ClientInterface $client, $username, $password, $signature)
     {
         $this->setUsername($username)
              ->setPassword($password)
@@ -35,7 +37,13 @@ class Gateway
              ->setClient($client);
     }
     
-    public function setClient(Zend_Http_Client $client)
+    public function setWebServiceUrl($webServiceUrl)
+    {
+        $this->webServiceUrl = (string) $webServiceUrl;
+        return $this;
+    }
+    
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
         return $this;
@@ -90,14 +98,17 @@ class Gateway
             self::SIGNATURE => $this->signature
         ) + $request->toArray();
         
-        $this->client->resetParameters()->setParameterPost($params);
-        $httpResponse = $this->client->request('POST');
+        /* @var $httpRequest \Guzzle\Http\Message\RequestInterface */
+        $httpRequest = $this->client->post($this->webServiceUrl, array(), $params);
+        
+        /* @var $httpResponse \Guzzle\Http\Message\Response */
+        $httpResponse = $httpRequest->send();
         
         if ($httpResponse->isError()) {
-            throw new Exception($httpResponse->getMessage(), $httpResponse->getStatus());
+            throw new Exception($httpResponse->getMessage(), $httpResponse->getStatusCode());
         }
         
-        $response = Response::factory($request->getMethod(), $httpResponse->getBody());
+        $response = Response::factory($request->getMethod(), $httpResponse->getBody(true));
         
         if ($response->isError()) {
             throw new Exception($response->getLongErrorMessage(), $response->getErrorCode());

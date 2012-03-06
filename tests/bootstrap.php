@@ -1,14 +1,12 @@
 <?php
 
-spl_autoload_register(function($class)
-{
-    $file = __DIR__.'/../lib/'.strtr($class, '\\', '/').'.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
-    }
-});
+require_once __DIR__.'/../vendor/symfony-components/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
-require_once 'Zend/Loader/Autoloader.php';
+$loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
+$loader->registerNamespaces(array(
+    'Tolerable' => __DIR__.'/../lib',
+    'Symfony\Component' => __DIR__.'/../vendor/symfony-components',
+    'Guzzle'            => __DIR__.'/../vendor/guzzle/src'
+));
+$loader->register();
 
-Zend_Loader_Autoloader::getInstance();
