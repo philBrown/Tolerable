@@ -27,20 +27,36 @@ class Gateway
      */
     private $client;
     
-    private $webServiceUrl = self::WS_URL;
+    private $webServiceUrl;
+    
+    private $redirectUrl;
 
-    public function __construct(ClientInterface $client, $username, $password, $signature)
+    public function __construct(ClientInterface $client, $username, $password, $signature,
+            $webServiceUrl = self::WS_URL, $redirectUrl = self::PAYPAL_URL)
     {
         $this->setUsername($username)
              ->setPassword($password)
              ->setSignature($signature)
-             ->setClient($client);
+             ->setClient($client)
+             ->setWebServiceUrl($webServiceUrl)
+             ->setRedirectUrl($redirectUrl);
     }
     
     public function setWebServiceUrl($webServiceUrl)
     {
         $this->webServiceUrl = (string) $webServiceUrl;
         return $this;
+    }
+    
+    public function setRedirectUrl($redirectUrl)
+    {
+        $this->redirectUrl = (string) $redirectUrl;
+        return $this;
+    }
+    
+    public function getRedirectUrl()
+    {
+        return $this->redirectUrl;
     }
     
     public function setClient(ClientInterface $client)
