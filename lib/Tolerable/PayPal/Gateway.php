@@ -54,9 +54,10 @@ class Gateway
         return $this;
     }
     
-    public function getRedirectUrl()
+    public function getRedirectUrl($token)
     {
-        return $this->redirectUrl;
+        return sprintf('%s?cmd=_express-checkout&token=%s',
+                $this->redirectUrl, $token);
     }
     
     public function setClient(ClientInterface $client)
