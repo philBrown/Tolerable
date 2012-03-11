@@ -28,8 +28,8 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
         ));
         $this->gateway = new Gateway(
                 $httpClient, "seller_1298871127_biz_api1.philipbrown.id.au",
-                "1298871136", "AyfC9oEHO-Ezj45ZrHIGKn0Gg-DhAou.YiHYRSS9JazujWP6UXIBOZ-5");
-        $this->gateway->setWebServiceUrl(Gateway::SANDBOX_WS_URL);
+                "1298871136", "AyfC9oEHO-Ezj45ZrHIGKn0Gg-DhAou.YiHYRSS9JazujWP6UXIBOZ-5",
+                Gateway::SANDBOX_WS_URL);
     }
 
     /**
