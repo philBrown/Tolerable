@@ -90,8 +90,8 @@ class Gateway
     }
 
     /**
-     * @param Tolerable_PayPal_SetExpressCheckoutRequest $request
-     * @return Tolerable_PayPal_Response
+     * @param SetExpressCheckoutRequest $request
+     * @return Response
      */
     public function setExpressCheckout(SetExpressCheckoutRequest $request)
     {
@@ -99,8 +99,8 @@ class Gateway
     }
     
     /**
-     * @param Tolerable_PayPal_DoExpressCheckoutPaymentRequest $request
-     * @return Tolerable_PayPal_DoExpressCheckoutPaymentResponse
+     * @param DoExpressCheckoutPaymentRequest $request
+     * @return DoExpressCheckoutPaymentResponse
      */
     public function doExpressCheckoutPayment(DoExpressCheckoutPaymentRequest $request)
     {
