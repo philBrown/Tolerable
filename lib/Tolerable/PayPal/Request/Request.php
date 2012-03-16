@@ -1,5 +1,5 @@
 <?php
-namespace Tolerable\PayPal;
+namespace Tolerable\PayPal\Request;
 
 abstract class Request
 {

@@ -1,5 +1,7 @@
 <?php
-namespace Tolerable\PayPal;
+namespace Tolerable\PayPal\Request;
+
+use Tolerable\PayPal\Item;
 
 abstract class ExpressCheckoutRequest extends Request
 {

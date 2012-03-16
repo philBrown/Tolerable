@@ -1,5 +1,5 @@
 <?php
-namespace Tolerable\PayPal;
+namespace Tolerable\PayPal\Request;
 
 class DoExpressCheckoutPaymentRequest extends ExpressCheckoutRequest
 {

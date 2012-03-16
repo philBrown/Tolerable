@@ -1,5 +1,5 @@
 <?php
-namespace Tolerable\PayPal;
+namespace Tolerable\PayPal\Response;
 
 use \Exception;
 
@@ -57,7 +57,7 @@ class Response
             case self::SET_EXPRESS_CHECKOUT :
                 return new Response($data);
             case self::GET_EXPRESS_CHECKOUT_DETAILS :
-                // TODO Implement GetExpressCheckoutDetailsResponse
+                return new GetExpressCheckoutDetailsResponse($data);
             case self::DO_EXPRESS_CHECKOUT_PAYMENT :
                 return new DoExpressCheckoutPaymentResponse($data);
             default :

@@ -44,7 +44,7 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
              ->setDescription('Test Product')
              ->setQuantity(2);
         
-        $request = new SetExpressCheckoutRequest(
+        $request = new Request\SetExpressCheckoutRequest(
                 'http://example.com/return',
                 'http://example.com/cancel');
         $request->addItem($item);

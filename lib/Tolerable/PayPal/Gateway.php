@@ -1,6 +1,12 @@
 <?php
 namespace Tolerable\PayPal;
 
+use Tolerable\PayPal\Request\Request;
+use Tolerable\PayPal\Request\SetExpressCheckoutRequest;
+use Tolerable\PayPal\Request\GetExpressCheckoutDetailsRequest;
+use Tolerable\PayPal\Request\DoExpressCheckoutPaymentRequest;
+use Tolerable\PayPal\Response\Response;
+
 use Guzzle\Service\ClientInterface;
 use \Exception;
 
@@ -94,6 +100,15 @@ class Gateway
      * @return Response
      */
     public function setExpressCheckout(SetExpressCheckoutRequest $request)
+    {
+        return $this->request($request);
+    }
+    
+    /**
+     * @param GetExpressCheckoutDetailsRequest $request
+     * @return Response\GetExpressCheckoutDetailsResponse 
+     */
+    public function getExpressCheckoutDetails(GetExpressCheckoutDetailsRequest $request)
     {
         return $this->request($request);
     }
