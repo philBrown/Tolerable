@@ -9,11 +9,16 @@ class SetExpressCheckoutRequest extends ExpressCheckoutRequest
     const HIDE_SHIPPING_ADDRESS    = 1;
     const DEFAULT_SHIPPING_ADDRESS = 2;
     
-    const RETURN_URL    = 'RETURNURL';
-    const CANCEL_URL    = 'CANCELURL';
-    const ALLOW_NOTE    = 'ALLOWNOTE';
-    const LOCALE_CODE   = 'LOCALECODE';
-    const SHOW_SHIPPING = 'NOSHIPPING';
+    const MAX_CALLBACK_TIMEOUT = 6;
+    
+    const RETURN_URL       = 'RETURNURL';
+    const CANCEL_URL       = 'CANCELURL';
+    const ALLOW_NOTE       = 'ALLOWNOTE';
+    const LOCALE_CODE      = 'LOCALECODE';
+    const SHOW_SHIPPING    = 'NOSHIPPING';
+    const CALLBACK         = 'CALLBACK';
+    const CALLBACK_TIMEOUT = 'CALLBACKTIMEOUT';
+    const CALLBACK_VERSION = 'CALLBACKVERSION';
     
     protected $method = self::METHOD;
     
@@ -22,6 +27,12 @@ class SetExpressCheckoutRequest extends ExpressCheckoutRequest
     protected $returnUrl;
     
     protected $cancelUrl;
+    
+    protected $callback;
+    
+    protected $callbackTimeout = self::MAX_CALLBACK_TIMEOUT;
+    
+    protected $callbackVersion = self::API_CURRENT_VERSION;
     
     public function __construct($returnUrl, $cancelUrl)
     {
@@ -41,14 +52,30 @@ class SetExpressCheckoutRequest extends ExpressCheckoutRequest
         return $this;
     }
     
+    public function setCallback($callback)
+    {
+        $this->callback = (string) $callback;
+        return $this;
+    }
+    
+    public function setCallbackTimeout($callbackTimeout)
+    {
+        $this->callbackTimeout = min(array(
+            (int) $callbackTimeout, self::MAX_CALLBACK_TIMEOUT));
+        return $this;
+    }
+    
     public function toArray()
     {
         return array(
-            self::RETURN_URL    => $this->returnUrl,
-            self::CANCEL_URL    => $this->cancelUrl,
-            self::ALLOW_NOTE    => 1,
-            self::SHOW_SHIPPING => $this->showShipping,
-            self::LOCALE_CODE   => 'AU'
+            self::RETURN_URL       => $this->returnUrl,
+            self::CANCEL_URL       => $this->cancelUrl,
+            self::ALLOW_NOTE       => 1,
+            self::SHOW_SHIPPING    => $this->showShipping,
+            self::LOCALE_CODE      => 'AU',
+            self::CALLBACK         => $this->callback,
+            self::CALLBACK_TIMEOUT => $this->callbackTimeout,
+            self::CALLBACK_VERSION => $this->callbackVersion
         ) + parent::toArray();
     }
 }
