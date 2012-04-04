@@ -1,11 +1,10 @@
 <?php
-
 namespace Tolerable\AusPost;
 
 interface Pac
 {
     /**
-     * @return object
+     * @return Response\ListCountriesResponse
      */
     public function listCountries();
     

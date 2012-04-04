@@ -1,6 +1,7 @@
 <?php
-
 namespace Tolerable\AusPost;
+
+use Tolerable\AusPost\Response\ListCountriesResponse;
 
 class PacImpl extends Api implements Pac
 {
@@ -75,9 +76,17 @@ class PacImpl extends Api implements Pac
         return $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_POSTAGE, $params);
     }
     
+    /**
+     * @return ListCountriesResponse
+     */
     public function listCountries()
     {
-        return $this->request(self::API_BASE_URL . self::COUNTRY);
+        $response = $this->request(self::API_BASE_URL . self::COUNTRY);
+        $list = new ListCountriesResponse();
+        foreach ($response->countries->country as $country) {
+            $list->addCountry(new Country($country->code, $country->name));
+        }
+        return $list;
     }
     
     public function listDomesticParcelServices()
