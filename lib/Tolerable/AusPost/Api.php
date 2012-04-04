@@ -1,8 +1,7 @@
 <?php
-
 namespace Tolerable\AusPost;
 
-use \Zend_Http_Client;
+use Guzzle\Service\ClientInterface;
 use \InvalidArgumentException, \RuntimeException;
 
 abstract class Api
@@ -14,19 +13,17 @@ abstract class Api
     private $key;
     
     /**
-     * @var Zend_Http_Client
+     * @var ClientInterface
      */
     private $client;
     
-    public function __construct(Zend_Http_Client $client, $key)
+    public function __construct(ClientInterface $client, $key)
     {
         $this->setKey($key)
              ->setClient($client);
-        
-        $this->client->setHeaders(self::KEY_HEADER, $this->key);
     }
     
-    public function setClient(Zend_Http_Client $client)
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
         return $this;
@@ -44,20 +41,22 @@ abstract class Api
     
     protected function request($uri, array $params = array())
     {
-        if (false === strpos($uri, self::FORMAT_JSON)) {
+        if (false === \strpos($uri, self::FORMAT_JSON)) {
             $uri = $uri . '.' . self::FORMAT_JSON;
         }
         
-        $this->client->setUri($uri)
-                     ->resetParameters()
-                     ->setParameterGet($params);
-        $httpResponse = $this->client->request('GET');
-
+        /* @var $httpRequest \Guzzle\Http\Message\RequestInterface */
+        $httpRequest = $this->client->get($uri,
+                array(self::KEY_HEADER => $this->key), $params);
+        
+        /* @var $httpResponse \Guzzle\Http\Message\Response */
+        $httpResponse = $httpRequest->send();
+        
         if ($httpResponse->isError()) {
-            throw new RuntimeException($httpResponse->getMessage(), $httpResponse->getStatus());
+            throw new RuntimeException($httpResponse->getMessage(), $httpResponse->getStatusCode());
         }
 
-        $response = json_decode($httpResponse->getBody());
+        $response = \json_decode($httpResponse->getBody(true));
         if (isset($response->error)) {
             throw new RuntimeException($response->error->errorMessage);
         }
