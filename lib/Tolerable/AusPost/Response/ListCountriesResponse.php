@@ -58,4 +58,8 @@ class ListCountriesResponse implements \IteratorAggregate, \ArrayAccess, \Counta
     {
         return \count($this->countries);
     }
+    
+    public function toArray() {
+        return $this->countries;
+    }
 }
