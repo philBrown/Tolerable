@@ -2,6 +2,10 @@
 namespace Tolerable\AusPost;
 
 use Tolerable\AusPost\Response\ListCountriesResponse;
+use Tolerable\AusPost\Response\ListParcelServicesResponse;
+use Tolerable\AusPost\Service\ParcelService;
+use Tolerable\AusPost\Service\ParcelServiceOption;
+use Tolerable\AusPost\Service\ParcelServiceSubOption;
 
 class PacImpl extends Api implements Pac
 {
@@ -89,13 +93,79 @@ class PacImpl extends Api implements Pac
         return $list;
     }
     
-    public function listDomesticParcelServices()
+    public function listDomesticParcelServices($fromPostcode, $toPostcode, $length, $width, $height, $weight)
     {
-        return $this->request(self::API_BASE_URL . self::DOMESTIC_PARCEL_SERVICE_LIST);
+        $params = array(
+            self::FROM_POSTCODE => $fromPostcode,
+            self::TO_POSTCODE   => $toPostcode,
+            self::LENGTH        => $length,
+            self::WIDTH         => $width,
+            self::HEIGHT        => $height,
+            self::WEIGHT        => $weight
+        );
+        
+        $response = $this->request(self::API_BASE_URL . self::DOMESTIC_PARCEL_SERVICE_LIST, $params);
+        
+        return $this->parcelServiceFactory($response);
     }
     
-    public function listInternationalParcelServices()
+    public function listInternationalParcelServices($countryCode, $weight)
     {
-        return $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_SERVICE_LIST);
+        $params = array(
+            self::COUNTRY_CODE => $countryCode,
+            self::WEIGHT       => $weight
+        );
+        
+        $response = $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_SERVICE_LIST, $params);
+        
+        return $this->parcelServiceFactory($response);
+    }
+    
+    /**
+     * @param stdclass $response
+     * @return ListParcelServicesResponse
+     */
+    private function parcelServiceFactory($response) {
+        $list = new ListParcelServicesResponse;
+        
+        /*
+         * Remember to check each collection is actually an array.
+         * AusPost seems to think it's ok to return an object for single
+         * result collections
+         */
+        $services = $response->services->service;
+        if (!is_array($services)) {
+            $services = array($services);
+        }
+        foreach ($services as $svc) {
+            $service = new ParcelService($svc->code, $svc->name);
+            if (isset($svc->price)) {
+                $service->setPrice($svc->price);
+            }
+            if (isset($svc->max_extra_cover)) {
+                $service->setMaxExtraCover($svc->max_extra_cover);
+            }
+            if (isset($svc->options)) {
+                $options = $svc->options->option;
+                if (!is_array($options)) {
+                    $options = array($options);
+                }
+                foreach ($options as $opt) {
+                    $option = new ParcelServiceOption($opt->code, $opt->name);
+                    if (isset($opt->suboptions)) {
+                        $suboptions = $opt->suboptions->option;
+                        if (!is_array($suboptions)) {
+                            $suboptions = array($suboptions);
+                        }
+                        foreach ($suboptions as $subopt) {
+                            $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
+                        }
+                    }
+                }
+                $service->addOption($option);
+            }
+            $list->addService($service);
+        }
+        return $list;        
     }
 }

@@ -71,10 +71,8 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testListDomesticParcelServices()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $list = $this->pac->listDomesticParcelServices(2000, 3012, 7, 14, 2, 1);
+        $this->assertGreaterThan(0, \count($list));
     }
 
     /**
@@ -82,10 +80,8 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testListInternationalParcelServices()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $list = $this->pac->listInternationalParcelServices('NZ', 3);
+        $this->assertGreaterThan(0, \count($list));
     }
 
 }

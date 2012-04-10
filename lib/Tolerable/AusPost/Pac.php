@@ -1,22 +1,25 @@
 <?php
 namespace Tolerable\AusPost;
 
+use Tolerable\AusPost\Response\ListCountriesResponse;
+use Tolerable\AusPost\Response\ListParcelServicesResponse;
+
 interface Pac
 {
     /**
-     * @return Response\ListCountriesResponse
+     * @return ListCountriesResponse
      */
     public function listCountries();
     
     /**
-     * @return object
+     * @return ListParcelServicesResponse
      */
-    public function listDomesticParcelServices();
+    public function listDomesticParcelServices($fromPostcode, $toPostcode, $length, $width, $height, $weight);
     
     /**
      * @return object
      */
-    public function listInternationalParcelServices();
+    public function listInternationalParcelServices($countryCode, $weight);
     
     /**
      * @param string $fromPostcode
