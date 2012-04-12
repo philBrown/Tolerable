@@ -52,4 +52,8 @@ class ListParcelServicesResponse implements \IteratorAggregate, \ArrayAccess, \C
     public function offsetUnset($offset) {
         return;
     }
+    
+    public function toArray() {
+        return $this->services;
+    }
 }
