@@ -1,7 +1,7 @@
 <?php
 namespace Tolerable\AusPost\Service;
 
-class ParcelService implements \Countable, \IteratorAggregate, \ArrayAccess {
+class ParcelService implements \Countable {
     /**
      * @var string
      */
@@ -134,25 +134,5 @@ class ParcelService implements \Countable, \IteratorAggregate, \ArrayAccess {
 
     public function count() {
         return \count($this->options);
-    }
-
-    public function getIterator() {
-        return new \ArrayIterator($this->options);
-    }
-
-    public function offsetExists($offset) {
-        return $this->hasOption($offset);
-    }
-
-    public function offsetGet($offset) {
-        return $this->getOption($offset);
-    }
-
-    public function offsetSet($offset, $value) {
-        return $this->addOption($value);
-    }
-
-    public function offsetUnset($offset) {
-        return;
     }
 }
