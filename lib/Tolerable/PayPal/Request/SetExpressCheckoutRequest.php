@@ -60,8 +60,7 @@ class SetExpressCheckoutRequest extends ExpressCheckoutRequest
     
     public function setCallbackTimeout($callbackTimeout)
     {
-        $this->callbackTimeout = min(array(
-            (int) $callbackTimeout, self::MAX_CALLBACK_TIMEOUT));
+        $this->callbackTimeout = min((int) $callbackTimeout, self::MAX_CALLBACK_TIMEOUT);
         return $this;
     }
     

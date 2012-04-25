@@ -161,8 +161,8 @@ class PacImpl extends Api implements Pac
                             $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
                         }
                     }
+                    $service->addOption($option);
                 }
-                $service->addOption($option);
             }
             $list->addService($service);
         }

@@ -71,7 +71,7 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testListDomesticParcelServices()
     {
-        $list = $this->pac->listDomesticParcelServices(2000, 3012, 7, 14, 2, 1);
+        $list = $this->pac->listDomesticParcelServices(3000, 3000, 23, 13, 3.5, 0.523);
         $this->assertGreaterThan(0, \count($list));
     }
 
