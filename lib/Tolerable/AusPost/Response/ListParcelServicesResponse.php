@@ -22,6 +22,10 @@ class ListParcelServicesResponse implements \IteratorAggregate, \ArrayAccess, \C
         return $this->services;
     }
     
+    /**
+     * @param string $code
+     * @return ParcelService 
+     */
     public function getService($code) {
         if ($this->hasService($code)) {
             return $this->services[$code];
@@ -41,6 +45,10 @@ class ListParcelServicesResponse implements \IteratorAggregate, \ArrayAccess, \C
         return $this->hasService($offset);
     }
 
+    /**
+     * @param string $offset
+     * @return ParcelService 
+     */
     public function offsetGet($offset) {
         return $this->getService($offset);
     }
