@@ -3,9 +3,11 @@ namespace Tolerable\AusPost;
 
 use Tolerable\AusPost\Response\ListCountriesResponse;
 use Tolerable\AusPost\Response\ListParcelServicesResponse;
+use Tolerable\AusPost\Response\PostageResultResponse;
 use Tolerable\AusPost\Service\ParcelService;
 use Tolerable\AusPost\Service\ParcelServiceOption;
 use Tolerable\AusPost\Service\ParcelServiceSubOption;
+use Tolerable\AusPost\Postage\Cost;
 
 class PacImpl extends Api implements Pac
 {
@@ -40,8 +42,10 @@ class PacImpl extends Api implements Pac
     const SUBOPTION_CODE = 'suboption_code';
     const EXTRA_COVER    = 'extra_cover';
     
-    
-    public function calculateDomesticParcelPostage($fromPostcode, $toPostcode, $length, $width, $height, $weight, $serviceCode, $optionCode = null, $subOptionCode = null, $extraCover = null)
+    /**
+     * @return PostageResultResponse 
+     */
+    public function calculateDomesticParcelPostage($fromPostcode, $toPostcode, $length, $width, $height, $weight, $serviceCode, $optionCode = null, array $subOptionCode = array(), $extraCover = null)
     {
         $params = array(
             self::FROM_POSTCODE => $fromPostcode,
@@ -61,10 +65,11 @@ class PacImpl extends Api implements Pac
         if (null !== $extraCover) {
             $params[self::EXTRA_COVER] = $extraCover;
         }
-        return $this->request(self::API_BASE_URL . self::DOMESTIC_PARCEL_POSTAGE, $params);
+        $response = $this->request(self::API_BASE_URL . self::DOMESTIC_PARCEL_POSTAGE, $params);
+        return $this->postageResultFactory($response);
     }
     
-    public function calculateInternationalParcelPostage($countryCode, $weight, $serviceCode, $optionCode = null, $extraCover = null)
+    public function calculateInternationalParcelPostage($countryCode, $weight, $serviceCode, array $optionCode = array(), $extraCover = null)
     {
         $params = array(
             self::COUNTRY_CODE => $countryCode,
@@ -77,7 +82,8 @@ class PacImpl extends Api implements Pac
         if (null !== $extraCover) {
             $params[self::EXTRA_COVER] = $extraCover;
         }
-        return $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_POSTAGE, $params);
+        $response = $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_POSTAGE, $params);
+        return $this->postageResultFactory($response);
     }
     
     /**
@@ -167,5 +173,30 @@ class PacImpl extends Api implements Pac
             $list->addService($service);
         }
         return $list;        
+    }
+    
+    /**
+     * @param stdclass $response 
+     * @return PostageResultResponse
+     */
+    private function postageResultFactory($response) {
+        $res = $response->postage_result;
+        $result = new PostageResultResponse($res->service, $res->total_cost);
+        
+        if (isset($res->delivery_time)) {
+            $result->setDeliveryTime($res->delivery_time);
+        }
+        
+        if (isset($res->costs)) {
+            $costs = $res->costs->cost;
+            if (!is_array($costs)) {
+                $costs = array($costs);
+            }
+            foreach ($costs as $cost) {
+                $result->addCost(new Cost($cost->cost, $cost->item));
+            }
+        }
+        
+        return $result;
     }
 }

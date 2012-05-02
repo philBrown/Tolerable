@@ -3,6 +3,7 @@ namespace Tolerable\AusPost;
 
 use Tolerable\AusPost\Response\ListCountriesResponse;
 use Tolerable\AusPost\Response\ListParcelServicesResponse;
+use Tolerable\AusPost\Response\PostageResultResponse;
 
 interface Pac
 {
@@ -17,7 +18,7 @@ interface Pac
     public function listDomesticParcelServices($fromPostcode, $toPostcode, $length, $width, $height, $weight);
     
     /**
-     * @return object
+     * @return ListParcelServicesResponse
      */
     public function listInternationalParcelServices($countryCode, $weight);
     
@@ -30,22 +31,22 @@ interface Pac
      * @param int    $weight        In kg
      * @param string $serviceCode
      * @param string $optionCode
-     * @param string $subOptionCode
+     * @param array  $subOptionCode
      * @param int $extraCover       In dollars
-     * @return object
+     * @return PostageResultResponse
      */
     public function calculateDomesticParcelPostage($fromPostcode, $toPostcode,
             $length, $width, $height, $weight, $serviceCode,
-            $optionCode = null, $subOptionCode = null, $extraCover = null);
+            $optionCode = null, array $subOptionCode = array(), $extraCover = null);
     
     /**
      * @param string $countryCode
      * @param int    $weight      In cm
      * @param string $serviceCode
-     * @param string $optionCode
+     * @param array  $optionCode
      * @param int    $extraCover  In dollars
-     * @return object
+     * @return PostageResultResponse
      */
     public function calculateInternationalParcelPostage($countryCode, $weight,
-            $serviceCode, $optionCode = null, $extraCover = null);
+            $serviceCode, array $optionCode = array(), $extraCover = null);
 }

@@ -40,10 +40,10 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testCalculateDomesticParcelPostage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $result = $this->pac->calculateDomesticParcelPostage(3000, 3000, 23, 13,
+                3.5, 0.523, 'AUS_PARCEL_REGULAR',
+                'AUS_SERVICE_OPTION_REGISTERED_POST');
+        $this->assertGreaterThan(0, \count($result->getCosts()));
     }
 
     /**
@@ -51,10 +51,8 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testCalculateInternationalParcelPostage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $result = $this->pac->calculateInternationalParcelPostage('NZ', 3, 'INTL_SERVICE_AIR_MAIL');
+        $this->assertGreaterThan(0, \count($result->getCosts()));
     }
 
     /**

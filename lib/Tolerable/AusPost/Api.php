@@ -47,7 +47,11 @@ abstract class Api
         
         /* @var $httpRequest \Guzzle\Http\Message\RequestInterface */
         $httpRequest = $this->client->get($uri, array(self::KEY_HEADER => $this->key));
-        $httpRequest->getQuery()->replace($params);
+        
+        /* @var $query \Guzzle\Http\QueryString */
+        $query = $httpRequest->getQuery();
+        $query->setAggregateFunction(array($query, 'aggregateUsingDuplicates'));
+        $query->replace($params);
         
         /* @var $httpResponse \Guzzle\Http\Message\Response */
         $httpResponse = $httpRequest->send();
