@@ -41,4 +41,16 @@ class PostageResultResponse {
     public function addCost(Cost $cost) {
         $this->costs[] = $cost;
     }
+    
+    public function toString($extraCover = null) {
+        $str = $this->service . '.';
+        /* @var $cost Cost */
+        foreach ($this->costs as $cost) {
+            $str .= "\n * " . $cost->getItem();
+        }
+        if (null !== $extraCover) {
+            $str .= \sprintf("\nExtra Cover: $%.2f", $extraCover);
+        }
+        return $str;
+    }
 }
