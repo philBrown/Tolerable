@@ -61,6 +61,41 @@ class GetExpressCheckoutDetailsResponse extends Response
     /**
      * @var string
      */
+    protected $payerId;
+    
+    /**
+     * @var string
+     */
+    protected $email;
+    
+    /**
+     * @var string
+     */
+    protected $salutation;
+    
+    /**
+     * @var string
+     */
+    protected $firstName;
+    
+    /**
+     * @var string
+     */
+    protected $middleName;
+    
+    /**
+     * @var string
+     */
+    protected $lastName;
+    
+    /**
+     * @var string
+     */
+    protected $suffix;
+    
+    /**
+     * @var string
+     */
     protected $shipToName;
     
     /**
@@ -101,5 +136,42 @@ class GetExpressCheckoutDetailsResponse extends Response
     protected function setData(array $data)
     {
         parent::setData($data);
+        
+        if (array_key_exists(self::PAYER_ID, $data)) {
+            $this->payerId = $data[self::PAYER_ID];
+        }
+        if (array_key_exists(self::EMAIL, $data)) {
+            $this->email = $data[self::EMAIL];
+        }
+        if (array_key_exists(self::SALUTATION, $data)) {
+            $this->salutation = $data[self::SALUTATION];
+        }
+        if (array_key_exists(self::FIRST_NAME, $data)) {
+            $this->firstName = $data[self::FIRST_NAME];
+        }
+        if (array_key_exists(self::MIDDLE_NAME, $data)) {
+            $this->middleName = $data[self::MIDDLE_NAME];
+        }
+        if (array_key_exists(self::LAST_NAME, $data)) {
+            $this->lastName = $data[self::LAST_NAME];
+        }
+        if (array_key_exists(self::SUFFIX, $data)) {
+            $this->suffix = $data[self::SUFFIX];
+        }
+    }
+    
+    public function getPayerId() {
+        return $this->payerId;
+    }
+    
+    public function getEmail() {
+        return $this->email;
+    }
+    
+    public function getFullName() {
+        return sprintf('%s%s %s',
+                $this->salutation ? $this->salutation . ' ' : '',
+                $this->firstName,
+                $this->lastName);
     }
 }
