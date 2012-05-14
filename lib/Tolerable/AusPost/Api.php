@@ -2,6 +2,7 @@
 namespace Tolerable\AusPost;
 
 use Guzzle\Service\ClientInterface;
+use Guzzle\Http\Exception\BadResponseException;
 use \InvalidArgumentException, \RuntimeException;
 
 abstract class Api
@@ -52,19 +53,24 @@ abstract class Api
         $query = $httpRequest->getQuery();
         $query->setAggregateFunction(array($query, 'aggregateUsingDuplicates'));
         $query->replace($params);
-        
-        /* @var $httpResponse \Guzzle\Http\Message\Response */
-        $httpResponse = $httpRequest->send();
-        
-        if ($httpResponse->isError()) {
-            throw new RuntimeException($httpResponse->getMessage(), $httpResponse->getStatusCode());
+
+        try {
+            /* @var $httpResponse \Guzzle\Http\Message\Response */
+            $httpResponse = $httpRequest->send();
+
+            if ($httpResponse->isError()) {
+                throw new RuntimeException($httpResponse->getMessage(), $httpResponse->getStatusCode());
+            }
+        } catch (BadResponseException $bre) {
+            $httpResponse = $bre->getResponse();
         }
+            
 
         $response = \json_decode($httpResponse->getBody(true));
         if (isset($response->error)) {
             throw new RuntimeException($response->error->errorMessage);
         }
-        
+
         return $response;
     }
 }
