@@ -63,6 +63,9 @@ abstract class Api
             }
         } catch (BadResponseException $bre) {
             $httpResponse = $bre->getResponse();
+            if (null === $httpResponse) {
+                throw $bre;
+            }
         }
             
 
