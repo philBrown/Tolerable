@@ -64,6 +64,29 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
         
         var_dump($response);
     }
+    
+    public function testDigitalItemSetExpressCheckout() {
+        $request = new Request\SetExpressCheckoutRequest(
+                'http://example.com/return',
+                'http://example.com/cancel');
+        $request->setShowShipping(1);
+        
+        $item = new Item();
+        $item->setAmount(10)
+             ->setTax(0)
+             ->setName('Something (with brackets)')
+             ->setDescription('This is a digital product')
+             ->setQuantity(1)
+             ->setCategory('Digital');
+        $request->addItem($item);
+        
+        $response = $this->gateway->setExpressCheckout($request);
+        
+        $this->assertFalse($response->isError());
+        $this->assertNotEmpty($response->getToken());
+        
+        var_dump($response);
+    }
 
     /**
      * @todo Implement testDoExpressCheckoutPayment().
