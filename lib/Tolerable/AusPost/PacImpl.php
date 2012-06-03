@@ -9,6 +9,8 @@ use Tolerable\AusPost\Service\ParcelServiceOption;
 use Tolerable\AusPost\Service\ParcelServiceSubOption;
 use Tolerable\AusPost\Postage\Cost;
 
+use Guzzle\Service\ClientInterface;
+
 class PacImpl extends Api implements Pac
 {
     const API_BASE_URL = 'https://auspost.com.au/api/postage/';
