@@ -170,7 +170,7 @@ class PacImpl extends Api implements Pac
             if (isset($svc->max_extra_cover)) {
                 $service->setMaxExtraCover($svc->max_extra_cover);
             }
-            if (isset($svc->options)) {
+            if (!empty($svc->options)) {
                 $options = $svc->options->option;
                 if (!is_array($options)) {
                     $options = array($options);
@@ -180,7 +180,7 @@ class PacImpl extends Api implements Pac
                         continue;
                     }
                     $option = new ParcelServiceOption($opt->code, $opt->name);
-                    if (isset($opt->suboptions)) {
+                    if (!empty($opt->suboptions)) {
                         $suboptions = $opt->suboptions->option;
                         if (!is_array($suboptions)) {
                             $suboptions = array($suboptions);

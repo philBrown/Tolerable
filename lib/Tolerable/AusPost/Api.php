@@ -68,7 +68,6 @@ abstract class Api
             }
         }
             
-
         $response = \json_decode($httpResponse->getBody(true));
         if (isset($response->error)) {
             throw new RuntimeException($response->error->errorMessage);
