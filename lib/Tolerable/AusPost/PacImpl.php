@@ -42,6 +42,20 @@ class PacImpl extends Api implements Pac
     const SUBOPTION_CODE = 'suboption_code';
     const EXTRA_COVER    = 'extra_cover';
     
+    private $serviceWhitelist;
+    private $optionWhitelist;
+    private $subOptionWhitelist;
+    
+    public function __construct(ClientInterface $client, $key,
+            array $serviceWhitelist = array(), array $optionWhitelist = array(),
+            array $subOptionWhitelist = array()) {
+        parent::__construct($client, $key);
+        
+        $this->serviceWhitelist = $serviceWhitelist;
+        $this->optionWhitelist = $optionWhitelist;
+        $this->subOptionWhitelist = $subOptionWhitelist;
+    }
+    
     /**
      * @return PostageResultResponse 
      */
@@ -144,6 +158,9 @@ class PacImpl extends Api implements Pac
             $services = array($services);
         }
         foreach ($services as $svc) {
+            if (count($this->serviceWhitelist) && !in_array($svc->code, $this->serviceWhitelist)) {
+                continue;
+            }
             $service = new ParcelService($svc->code, $svc->name);
             if (isset($svc->price)) {
                 $service->setPrice($svc->price);
@@ -157,6 +174,9 @@ class PacImpl extends Api implements Pac
                     $options = array($options);
                 }
                 foreach ($options as $opt) {
+                    if (count($this->optionWhitelist) && !in_array($opt->code, $this->optionWhitelist)) {
+                        continue;
+                    }
                     $option = new ParcelServiceOption($opt->code, $opt->name);
                     if (isset($opt->suboptions)) {
                         $suboptions = $opt->suboptions->option;
@@ -164,6 +184,9 @@ class PacImpl extends Api implements Pac
                             $suboptions = array($suboptions);
                         }
                         foreach ($suboptions as $subopt) {
+                            if (count($this->subOptionWhitelist) && !in_array($subopt->code, $this->subOptionWhitelist)) {
+                                continue;
+                            }
                             $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
                         }
                     }
