@@ -78,7 +78,7 @@ class PacImplTest extends PHPUnit_Framework_TestCase
      */
     public function testListInternationalParcelServices()
     {
-        $list = $this->pac->listInternationalParcelServices('US', 0.523);
+        $list = $this->pac->listInternationalParcelServices('GB', 0.523);
         $this->assertGreaterThan(0, \count($list));
     }
 

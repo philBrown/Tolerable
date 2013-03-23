@@ -1,0 +1,6 @@
+{
+    "name": "philbrown/tolerable",
+    "require": {
+        "guzzle/guzzle": "~3.3"
+    }
+}
