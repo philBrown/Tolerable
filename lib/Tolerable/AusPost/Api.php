@@ -3,6 +3,7 @@ namespace Tolerable\AusPost;
 
 use Guzzle\Service\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\QueryAggregator\DuplicateAggregator;
 use \InvalidArgumentException, \RuntimeException;
 
 abstract class Api
@@ -51,7 +52,7 @@ abstract class Api
         
         /* @var $query \Guzzle\Http\QueryString */
         $query = $httpRequest->getQuery();
-        $query->setAggregateFunction(array($query, 'aggregateUsingDuplicates'));
+        $query->setAggregator(new DuplicateAggregator);
         $query->replace($params);
 
         try {

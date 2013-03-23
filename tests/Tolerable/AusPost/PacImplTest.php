@@ -20,8 +20,10 @@ class PacImplTest extends PHPUnit_Framework_TestCase
     {
         $client = new Client();
         $client->setConfig(array(
-            'curl.CURLOPT_SSL_VERIFYHOST' => false,
-            'curl.CURLOPT_SSL_VERIFYPEER' => false,
+            'ssl.certificate_authority' => 'system',
+            'curl.options' => array(
+                CURLOPT_SSL_VERIFYPEER => false
+            )
         ));
         $this->pac = new PacImpl($client, 'RK445xsvJetnJrrQuZXCYybTDqcf61jd');
     }
