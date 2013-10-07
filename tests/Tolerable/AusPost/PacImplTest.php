@@ -25,7 +25,7 @@ class PacImplTest extends PHPUnit_Framework_TestCase
                 CURLOPT_SSL_VERIFYPEER => false
             )
         ));
-        $this->pac = new PacImpl($client, 'RK445xsvJetnJrrQuZXCYybTDqcf61jd');
+        $this->pac = new PacImpl($client, 'insert your API code here');
     }
 
     /**
