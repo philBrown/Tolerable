@@ -17,8 +17,7 @@ class PacImplTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $client = new Client();
-        $this->pac = new PacImpl($client, getenv('AUSPOST_API_KEY'));
+        $this->pac = new PacImpl(new Client(), getenv('AUSPOST_API_KEY'));
     }
 
     /**
