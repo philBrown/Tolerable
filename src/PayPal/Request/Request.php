@@ -3,7 +3,7 @@ namespace Tolerable\PayPal\Request;
 
 abstract class Request
 {
-    const API_CURRENT_VERSION = '84.0';
+    const API_CURRENT_VERSION = '113';
     
     const VERSION = 'VERSION';
     const METHOD  = 'METHOD';

@@ -1,10 +1,9 @@
 <?php
 namespace Tolerable\AusPost;
 
-use \PHPUnit_Framework_TestCase;
-use Guzzle\Service\Client;
+use GuzzleHttp\Client;
 
-class PacImplTest extends PHPUnit_Framework_TestCase
+class PacImplTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -19,13 +18,7 @@ class PacImplTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $client = new Client();
-        $client->setConfig(array(
-            'ssl.certificate_authority' => 'system',
-            'curl.options' => array(
-                CURLOPT_SSL_VERIFYPEER => false
-            )
-        ));
-        $this->pac = new PacImpl($client, 'RK445xsvJetnJrrQuZXCYybTDqcf61jd');
+        $this->pac = new PacImpl($client, getenv('AUSPOST_API_KEY'));
     }
 
     /**
@@ -44,7 +37,7 @@ class PacImplTest extends PHPUnit_Framework_TestCase
     {
         $result = $this->pac->calculateDomesticParcelPostage(3000, 3000, 23, 13,
                 3.5, 0.523, 'AUS_PARCEL_REGULAR',
-                'AUS_SERVICE_OPTION_REGISTERED_POST');
+                'AUS_SERVICE_OPTION_STANDARD');
         $this->assertGreaterThan(0, \count($result->getCosts()));
     }
 
@@ -83,5 +76,4 @@ class PacImplTest extends PHPUnit_Framework_TestCase
         $list = $this->pac->listInternationalParcelServices('GB', 0.523);
         $this->assertGreaterThan(0, \count($list));
     }
-
 }

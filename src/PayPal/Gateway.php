@@ -7,7 +7,7 @@ use Tolerable\PayPal\Request\GetExpressCheckoutDetailsRequest;
 use Tolerable\PayPal\Request\DoExpressCheckoutPaymentRequest;
 use Tolerable\PayPal\Response\Response;
 
-use Guzzle\Service\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use \Exception;
 
 class Gateway
@@ -130,17 +130,9 @@ class Gateway
             self::SIGNATURE => $this->signature
         ) + $request->toArray();
         
-        /* @var $httpRequest \Guzzle\Http\Message\RequestInterface */
-        $httpRequest = $this->client->post($this->webServiceUrl, array(), $params);
+        $httpResponse = $this->client->post($this->webServiceUrl, ['body' => $params]);
         
-        /* @var $httpResponse \Guzzle\Http\Message\Response */
-        $httpResponse = $httpRequest->send();
-        
-        if ($httpResponse->isError()) {
-            throw new Exception($httpResponse->getMessage(), $httpResponse->getStatusCode());
-        }
-        
-        $response = Response::factory($request->getMethod(), $httpResponse->getBody(true));
+        $response = Response::factory($request->getMethod(), $httpResponse->getBody());
         
         if ($response->isError()) {
             throw new Exception($response->getLongErrorMessage(), $response->getErrorCode());

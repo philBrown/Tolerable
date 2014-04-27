@@ -1,0 +1,14 @@
+language: php
+php:
+- 5.4
+- 5.5
+- 5.6
+- hhvm
+env:
+  global:
+  - secure: rfZqpS2KJUeP7axeWMOln7S5r4lnXKXYjUtsmxEvZdPqFxaOb92ldWbomHHtfhdzXPchuKbuUUx2By7bJpZRChnJVysNYL0IMUbHnSZWtZ95M1efgjOF17hICmCjTriu3oeBIeYs8tzKAmQYN//yTqt7auB0glmgqr6wip62UJk=
+  - secure: SKVZK+KTwGEUdOLrvuO8zR+Q+NG+TTYcT2zN2+lIm4WBFWbZQkq0NK8KLVYOGV8HVyE9I/pjTDtQQs/4xWYDVTaVpFPPy4WdX1Ll2qrmRCzVK/mHZUds+DoOYQb/qEUZNRSR9AWpjNYZ2REB0oi3YdGdJUMRcGRj8X4d/mh338s=
+  - secure: oX2opY5w0tAkUU2W6cWbpkWkV5Vl5/54cVp2zddmokqIFSQm8juA9ayc5J64PZF1TGSJFcM2peQrSZkf1KjzTPiKnT1pkj+9UptIlU0Wgnw0ufsYAbmUJIR7vkIq9Np8KwGPJ9BHT/PXUkJAq4dQUqXA9RCTMyYGu3VVJb4HU5c=
+  - secure: VtYb4wPbDKXzOha066nvbK8czsO7x/7gpla7RIpfj7rImhXCbmK74ojkOx+4WqC7C+ieaQPNvvwpBSiPuUExfVppBAalOt9Jifcboor0ZRY8bAzlkHtYtngYwf/DlYXDkswKjfJEORNeFb9dTEw/jlG0WKDGgm0WkgVLHVZXfj8=
+
+install: composer install

@@ -1,9 +1,8 @@
 <?php
 namespace Tolerable\AusPost;
 
-use Guzzle\Service\ClientInterface;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\QueryAggregator\DuplicateAggregator;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use \InvalidArgumentException, \RuntimeException;
 
 abstract class Api
@@ -41,27 +40,20 @@ abstract class Api
         return $this;
     }
     
-    protected function request($uri, array $params = array())
+    protected function request($uri, array $params = [])
     {
         if (false === \strpos($uri, self::FORMAT_JSON)) {
             $uri = $uri . '.' . self::FORMAT_JSON;
         }
         
-        /* @var $httpRequest \Guzzle\Http\Message\RequestInterface */
-        $httpRequest = $this->client->get($uri, array(self::KEY_HEADER => $this->key));
+        /* @var $httpRequest \GuzzleHttp\Message\RequestInterface */
+        $httpRequest = $this->client->createRequest('GET', $uri, [
+            'headers' => [self::KEY_HEADER => $this->key],
+            'query'   => $params
+        ]);
         
-        /* @var $query \Guzzle\Http\QueryString */
-        $query = $httpRequest->getQuery();
-        $query->setAggregator(new DuplicateAggregator);
-        $query->replace($params);
-
         try {
-            /* @var $httpResponse \Guzzle\Http\Message\Response */
-            $httpResponse = $httpRequest->send();
-
-            if ($httpResponse->isError()) {
-                throw new RuntimeException($httpResponse->getMessage(), $httpResponse->getStatusCode());
-            }
+            $httpResponse = $this->client->send($httpRequest);
         } catch (BadResponseException $bre) {
             $httpResponse = $bre->getResponse();
             if (null === $httpResponse) {
@@ -69,7 +61,7 @@ abstract class Api
             }
         }
             
-        $response = \json_decode($httpResponse->getBody(true));
+        $response = $httpResponse->json(['object' => true]);
         if (isset($response->error)) {
             throw new RuntimeException($response->error->errorMessage);
         }

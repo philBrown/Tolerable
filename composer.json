@@ -1,9 +1,14 @@
 {
     "name": "philbrown/tolerable",
+    "type": "library",
     "require": {
-        "guzzle/guzzle": "~3.7"
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "~4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-0": { "Tolerable": "lib/" }
+        "psr-4": { "Tolerable\\": "src/" }
     }
 }

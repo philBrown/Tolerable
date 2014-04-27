@@ -9,7 +9,7 @@ use Tolerable\AusPost\Service\ParcelServiceOption;
 use Tolerable\AusPost\Service\ParcelServiceSubOption;
 use Tolerable\AusPost\Postage\Cost;
 
-use Guzzle\Service\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 class PacImpl extends Api implements Pac
 {
