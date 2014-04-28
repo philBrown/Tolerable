@@ -171,7 +171,7 @@ class PacImpl extends Api implements Pac
                 $service->setMaxExtraCover($svc->max_extra_cover);
             }
             if (!empty($svc->options)) {
-                $this->populateParcelServiceOptions($service, $svc->options);
+                $this->populateParcelServiceOptions($service, $svc->options->option);
             }
             $list->addService($service);
         }
@@ -188,7 +188,7 @@ class PacImpl extends Api implements Pac
             }
             $option = new ParcelServiceOption($opt->code, $opt->name);
             if (!empty($opt->suboptions)) {
-                $this->populateParcelServiceOptionSubOptions($option, $opt->suboptions);
+                $this->populateParcelServiceOptionSubOptions($option, $opt->suboptions->option);
             }
             $service->addOption($option);
         }

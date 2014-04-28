@@ -96,6 +96,6 @@ class PacIntegrationTest extends \PHPUnit_Framework_TestCase
      */
     private function getInternationalParcelCalculationResult($service, array $options = []) {
         return $this->pac->calculateInternationalParcelPostage($this->countryCode,
-                $this->weight, $service, $options);
+                $this->weight, $service, $options, 10);
     }
 }

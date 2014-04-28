@@ -13,4 +13,6 @@ env:
     - secure: oX2opY5w0tAkUU2W6cWbpkWkV5Vl5/54cVp2zddmokqIFSQm8juA9ayc5J64PZF1TGSJFcM2peQrSZkf1KjzTPiKnT1pkj+9UptIlU0Wgnw0ufsYAbmUJIR7vkIq9Np8KwGPJ9BHT/PXUkJAq4dQUqXA9RCTMyYGu3VVJb4HU5c=
     - secure: VtYb4wPbDKXzOha066nvbK8czsO7x/7gpla7RIpfj7rImhXCbmK74ojkOx+4WqC7C+ieaQPNvvwpBSiPuUExfVppBAalOt9Jifcboor0ZRY8bAzlkHtYtngYwf/DlYXDkswKjfJEORNeFb9dTEw/jlG0WKDGgm0WkgVLHVZXfj8=
 
+before_install: composer self-update
+
 install: composer install
