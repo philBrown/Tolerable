@@ -5,6 +5,13 @@ use GuzzleHttp\Client;
 
 class PacIntegrationTest extends \PHPUnit_Framework_TestCase
 {
+    private $fromPostcode = 3000;
+    private $toPostcode = 3000;
+    private $length = 23;
+    private $width = 13;
+    private $height = 3.5;
+    private $weight = 0.523;
+    private $countryCode = 'NZ';
 
     /**
      * @var Pac
@@ -29,52 +36,66 @@ class PacIntegrationTest extends \PHPUnit_Framework_TestCase
         
     }
 
-    /**
-     * @todo Implement testCalculateDomesticParcelPostage().
-     */
     public function testCalculateDomesticParcelPostage()
     {
-        $result = $this->pac->calculateDomesticParcelPostage(3000, 3000, 23, 13,
-                3.5, 0.523, 'AUS_PARCEL_REGULAR',
-                'AUS_SERVICE_OPTION_STANDARD');
-        $this->assertGreaterThan(0, \count($result->getCosts()));
-        // $this->assertEquals('AUS_PARCEL_REGULAR', $result->getService());
+        $services = $this->pac->listDomesticParcelServices($this->fromPostcode,
+                $this->toPostcode, $this->length, $this->width, $this->height,
+                $this->weight);
+        $this->assertGreaterThan(0, \count($services), 'Expecting at least one domestic parcel service');
+        
+        /* @var $service Service\ParcelService */
+        foreach ($services as $service) {
+            // test default service option
+            $result = $this->getDomesticeParcelCalculationResult($service->getCode());
+            $this->assertGreaterThan(0, \count($result->getCosts()),
+                    \sprintf('Expecting at least one cost for domestic service [%s]', $service->getCode()));
+            
+            // test service options
+            /* @var $option Service\ParcelServiceOption */
+            foreach ($service->getOptions() as $option) {
+                $result = $this->getDomesticeParcelCalculationResult(
+                        $service->getCode(), $option->getCode());
+                $this->assertGreaterThan(0, \count($result->getCosts()),
+                        \sprintf('Expecting at least one cost for domestic service [%s] with option [%s]', $service->getCode(), $option->getCode()));
+            }
+        }
     }
 
-    /**
-     * @todo Implement testCalculateInternationalParcelPostage().
-     */
     public function testCalculateInternationalParcelPostage()
     {
-        $result = $this->pac->calculateInternationalParcelPostage('NZ', 3, 'INTL_SERVICE_AIR_MAIL');
-        $this->assertGreaterThan(0, \count($result->getCosts()));
-        // $this->assertEquals('INTL_SERVICE_AIR_MAIL', $result->getService());
+        $countries = $this->pac->listCountries();
+        $this->assertTrue($countries->hasCountry($this->countryCode), 'Nominated test country not found');
+        
+        $services = $this->pac->listInternationalParcelServices($this->countryCode, $this->weight);
+        $this->assertGreaterThan(0, \count($services), 'Expecting at least one international parcel service');
+        
+        /* @var $service Service\ParcelService */
+        foreach ($services as $service) {
+            // test default service
+            $default = $this->getInternationalParcelCalculationResult($service->getCode());
+            $this->assertGreaterThan(0, \count($default->getCosts()));
+            
+            // test service options
+            $result = $this->getInternationalParcelCalculationResult($service->getCode(),
+                    $service->getOptionCodes());
+            $this->assertGreaterThan(0, \count($result->getCosts()));
+        }
     }
 
     /**
-     * @todo Implement testListCountries().
+     * @return Response\PostageResultResponse
      */
-    public function testListCountries()
-    {
-        $list = $this->pac->listCountries();
-        $this->assertGreaterThan(0, \count($list));
+    private function getDomesticeParcelCalculationResult($service, $option = null, array $subOptions = []) {
+        return $this->pac->calculateDomesticParcelPostage($this->fromPostcode,
+                $this->toPostcode, $this->length, $this->width, $this->height,
+                $this->weight, $service, $option, $subOptions);
     }
-
+    
     /**
-     * @todo Implement testListDomesticParcelServices().
+     * @return Response\PostageResultResponse
      */
-    public function testListDomesticParcelServices()
-    {
-        $list = $this->pac->listDomesticParcelServices(3000, 3000, 23, 13, 3.5, 0.523);
-        $this->assertGreaterThan(0, \count($list));
-    }
-
-    /**
-     * @todo Implement testListInternationalParcelServices().
-     */
-    public function testListInternationalParcelServices()
-    {
-        $list = $this->pac->listInternationalParcelServices('GB', 0.523);
-        $this->assertGreaterThan(0, \count($list));
+    private function getInternationalParcelCalculationResult($service, array $options = []) {
+        return $this->pac->calculateInternationalParcelPostage($this->countryCode,
+                $this->weight, $service, $options);
     }
 }

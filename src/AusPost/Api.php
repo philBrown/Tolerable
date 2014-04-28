@@ -2,6 +2,7 @@
 namespace Tolerable\AusPost;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Query;
 use GuzzleHttp\Exception\BadResponseException;
 use \InvalidArgumentException, \RuntimeException;
 
@@ -51,6 +52,7 @@ abstract class Api
             'headers' => [self::KEY_HEADER => $this->key],
             'query'   => $params
         ]);
+        $httpRequest->getQuery()->setAggregator(Query::duplicateAggregator());
         
         try {
             $httpResponse = $this->client->send($httpRequest);

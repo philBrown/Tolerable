@@ -7,7 +7,7 @@ class ListParcelServicesResponse implements \IteratorAggregate, \ArrayAccess, \C
     /**
      * @var array
      */
-    private $services = array();
+    private $services = [];
     
     public function addService(ParcelService $service) {
         $this->services[$service->getCode()] = $service;

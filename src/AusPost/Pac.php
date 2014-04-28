@@ -37,7 +37,7 @@ interface Pac
      */
     public function calculateDomesticParcelPostage($fromPostcode, $toPostcode,
             $length, $width, $height, $weight, $serviceCode,
-            $optionCode = null, array $subOptionCode = array(), $extraCover = null);
+            $optionCode = null, array $subOptionCode = [], $extraCover = null);
     
     /**
      * @param string $countryCode
@@ -48,5 +48,5 @@ interface Pac
      * @return PostageResultResponse
      */
     public function calculateInternationalParcelPostage($countryCode, $weight,
-            $serviceCode, array $optionCode = array(), $extraCover = null);
+            $serviceCode, array $optionCode = [], $extraCover = null);
 }

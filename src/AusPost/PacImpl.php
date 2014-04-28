@@ -61,9 +61,9 @@ class PacImpl extends Api implements Pac
     /**
      * @return PostageResultResponse
      */
-    public function calculateDomesticParcelPostage($fromPostcode, $toPostcode, $length, $width, $height, $weight, $serviceCode, $optionCode = null, array $subOptionCode = array(), $extraCover = null)
+    public function calculateDomesticParcelPostage($fromPostcode, $toPostcode, $length, $width, $height, $weight, $serviceCode, $optionCode = null, array $subOptionCode = [], $extraCover = null)
     {
-        $params = array(
+        $params = [
             self::FROM_POSTCODE => $fromPostcode,
             self::TO_POSTCODE   => $toPostcode,
             self::LENGTH        => $length,
@@ -71,7 +71,7 @@ class PacImpl extends Api implements Pac
             self::HEIGHT        => $height,
             self::WEIGHT        => $weight,
             self::SERVICE_CODE  => $serviceCode
-        );
+        ];
         if (null !== $optionCode) {
             $params[self::OPTION_CODE] = $optionCode;
         }
@@ -85,13 +85,13 @@ class PacImpl extends Api implements Pac
         return $this->postageResultFactory($response);
     }
     
-    public function calculateInternationalParcelPostage($countryCode, $weight, $serviceCode, array $optionCode = array(), $extraCover = null)
+    public function calculateInternationalParcelPostage($countryCode, $weight, $serviceCode, array $optionCode = [], $extraCover = null)
     {
-        $params = array(
+        $params = [
             self::COUNTRY_CODE => $countryCode,
             self::WEIGHT       => $weight,
             self::SERVICE_CODE => $serviceCode,
-        );
+        ];
         if (null !== $optionCode) {
             $params[self::OPTION_CODE] = $optionCode;
         }
@@ -117,14 +117,14 @@ class PacImpl extends Api implements Pac
     
     public function listDomesticParcelServices($fromPostcode, $toPostcode, $length, $width, $height, $weight)
     {
-        $params = array(
+        $params = [
             self::FROM_POSTCODE => $fromPostcode,
             self::TO_POSTCODE   => $toPostcode,
             self::LENGTH        => $length,
             self::WIDTH         => $width,
             self::HEIGHT        => $height,
             self::WEIGHT        => $weight
-        );
+        ];
         
         $response = $this->request(self::API_BASE_URL . self::DOMESTIC_PARCEL_SERVICE_LIST, $params);
         
@@ -133,10 +133,10 @@ class PacImpl extends Api implements Pac
     
     public function listInternationalParcelServices($countryCode, $weight)
     {
-        $params = array(
+        $params = [
             self::COUNTRY_CODE => $countryCode,
             self::WEIGHT       => $weight
-        );
+        ];
         
         $response = $this->request(self::API_BASE_URL . self::INTERNATIONAL_PARCEL_SERVICE_LIST, $params);
         
@@ -148,7 +148,7 @@ class PacImpl extends Api implements Pac
      * @return ListParcelServicesResponse
      */
     private function parcelServiceFactory($response) {
-        $list = new ListParcelServicesResponse;
+        $list = new ListParcelServicesResponse();
         
         /*
          * Remember to check each collection is actually an array.
@@ -157,7 +157,7 @@ class PacImpl extends Api implements Pac
          */
         $services = $response->services->service;
         if (!is_array($services)) {
-            $services = array($services);
+            $services = [$services];
         }
         foreach ($services as $svc) {
             if (is_array($this->serviceWhitelist) && !in_array($svc->code, $this->serviceWhitelist)) {
@@ -171,33 +171,39 @@ class PacImpl extends Api implements Pac
                 $service->setMaxExtraCover($svc->max_extra_cover);
             }
             if (!empty($svc->options)) {
-                $options = $svc->options->option;
-                if (!is_array($options)) {
-                    $options = array($options);
-                }
-                foreach ($options as $opt) {
-                    if (is_array($this->optionWhitelist) && !in_array($opt->code, $this->optionWhitelist)) {
-                        continue;
-                    }
-                    $option = new ParcelServiceOption($opt->code, $opt->name);
-                    if (!empty($opt->suboptions)) {
-                        $suboptions = $opt->suboptions->option;
-                        if (!is_array($suboptions)) {
-                            $suboptions = array($suboptions);
-                        }
-                        foreach ($suboptions as $subopt) {
-                            if (is_array($this->subOptionWhitelist) && !in_array($subopt->code, $this->subOptionWhitelist)) {
-                                continue;
-                            }
-                            $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
-                        }
-                    }
-                    $service->addOption($option);
-                }
+                $this->populateParcelServiceOptions($service, $svc->options);
             }
             $list->addService($service);
         }
         return $list;        
+    }
+    
+    private function populateParcelServiceOptions(ParcelService $service, $options) {
+        if (!is_array($options)) {
+            $options = [$options];
+        }
+        foreach ($options as $opt) {
+            if (is_array($this->optionWhitelist) && !in_array($opt->code, $this->optionWhitelist)) {
+                continue;
+            }
+            $option = new ParcelServiceOption($opt->code, $opt->name);
+            if (!empty($opt->suboptions)) {
+                $this->populateParcelServiceOptionSubOptions($option, $opt->suboptions);
+            }
+            $service->addOption($option);
+        }
+    }
+    
+    private function populateParcelServiceOptionSubOptions(ParcelServiceOption $option, $suboptions) {
+        if (!is_array($suboptions)) {
+            $suboptions = array($suboptions);
+        }
+        foreach ($suboptions as $subopt) {
+            if (is_array($this->subOptionWhitelist) && !in_array($subopt->code, $this->subOptionWhitelist)) {
+                continue;
+            }
+            $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
+        }
     }
     
     /**
@@ -215,7 +221,7 @@ class PacImpl extends Api implements Pac
         if (isset($res->costs)) {
             $costs = $res->costs->cost;
             if (!is_array($costs)) {
-                $costs = array($costs);
+                $costs = [$costs];
             }
             foreach ($costs as $cost) {
                 $result->addCost(new Cost($cost->cost, $cost->item));

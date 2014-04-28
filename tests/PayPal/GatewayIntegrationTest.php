@@ -60,7 +60,7 @@ class GatewayIntegrationTest extends \PHPUnit_Framework_TestCase
         $request = new Request\SetExpressCheckoutRequest(
                 'http://example.com/return',
                 'http://example.com/cancel');
-        $request->setShowShipping(1);
+        $request->setShowShipping(Request\SetExpressCheckoutRequest::HIDE_SHIPPING_ADDRESS);
         
         $item = new Item();
         $item->setAmount(10)

@@ -25,7 +25,7 @@ class ParcelService implements \Countable {
     /**
      * @var array
      */
-    private $options = array();
+    private $options = [];
     
     public function __construct($code, $name) {
         $this->setCode($code)
@@ -114,6 +114,13 @@ class ParcelService implements \Countable {
     public function getOptions()
     {
         return $this->options;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getOptionCodes() {
+        return \array_keys($this->options);
     }
     
     public function addOption(ParcelServiceOption $option) {
