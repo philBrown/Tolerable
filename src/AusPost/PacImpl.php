@@ -59,7 +59,7 @@ class PacImpl extends Api implements Pac
     }
     
     /**
-     * @return PostageResultResponse 
+     * @return PostageResultResponse
      */
     public function calculateDomesticParcelPostage($fromPostcode, $toPostcode, $length, $width, $height, $weight, $serviceCode, $optionCode = null, array $subOptionCode = array(), $extraCover = null)
     {

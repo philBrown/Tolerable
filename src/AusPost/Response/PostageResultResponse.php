@@ -10,7 +10,7 @@ class PostageResultResponse {
     
     private $totalCost;
     
-    private $costs = array();
+    private $costs = [];
     
     public function __construct($service, $totalCost) {
         $this->service = (string) $service;
