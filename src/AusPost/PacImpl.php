@@ -13,7 +13,7 @@ use GuzzleHttp\ClientInterface;
 
 class PacImpl extends Api implements Pac
 {
-    const API_BASE_URL = 'https://auspost.com.au/api/postage/';
+    const API_BASE_URL = 'https://digitalapi.auspost.com.au/postage/';
     
     const COUNTRY = 'country';
     
