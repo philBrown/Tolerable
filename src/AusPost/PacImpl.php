@@ -160,7 +160,8 @@ class PacImpl extends Api implements Pac
             $services = [$services];
         }
         foreach ($services as $svc) {
-            if (is_array($this->serviceWhitelist) && !in_array($svc->code, $this->serviceWhitelist)) {
+            if (!isset($svc->code) || (is_array($this->serviceWhitelist) && !in_array($svc->code, $this->serviceWhitelist))) {
+                // skip broken and blacklisted services
                 continue;
             }
             $service = new ParcelService($svc->code, $svc->name);
@@ -183,7 +184,7 @@ class PacImpl extends Api implements Pac
             $options = [$options];
         }
         foreach ($options as $opt) {
-            if (is_array($this->optionWhitelist) && !in_array($opt->code, $this->optionWhitelist)) {
+            if (!isset($opt->code) || (is_array($this->optionWhitelist) && !in_array($opt->code, $this->optionWhitelist))) {
                 continue;
             }
             $option = new ParcelServiceOption($opt->code, $opt->name);
@@ -199,7 +200,7 @@ class PacImpl extends Api implements Pac
             $suboptions = array($suboptions);
         }
         foreach ($suboptions as $subopt) {
-            if (is_array($this->subOptionWhitelist) && !in_array($subopt->code, $this->subOptionWhitelist)) {
+            if (!isset($subopt->code) || (is_array($this->subOptionWhitelist) && !in_array($subopt->code, $this->subOptionWhitelist))) {
                 continue;
             }
             $option->addSubOption(new ParcelServiceSubOption($subopt->code, $subopt->name));
